@@ -70,6 +70,7 @@ public class TrashSegregationGUI {
         btnPanel.add(leaderboardBtn);
         //---END---//
 
+        //---adding for frame out---//
         mainPanel.add(appNamePanel);
         mainPanel.add(usernamePanel);
         mainPanel.add(trashTypePanel);
@@ -77,8 +78,9 @@ public class TrashSegregationGUI {
         mainPanel.add(trashWeightPanel);
         frame.add(mainPanel, BorderLayout.CENTER);
         frame.add(btnPanel, BorderLayout.SOUTH);
+        //---END---//
 
-        //---button functionality---//
+        //---add trash button functionality---//
         addTrashBtn.addActionListener(e ->{
             if (!usernameField.getText().isEmpty() && !trashNameField.getText().isEmpty() && !trashWeightField.getText().isEmpty()){
                 String trashOption = (String) trashTypeOptions.getSelectedItem();
