@@ -8,10 +8,11 @@ public class TrashSegregationGUI {
     public JPanel usernamePanel, trashTypePanel, trashNamePanel, trashWeightPanel;
     public JButton addTrashBtn = new JButton("Add Trash");
     public JButton leaderboardBtn = new JButton("Leaderboard");
+    public JButton guideBtn = new JButton("Show Trash Guide");
+    public UserLeaderboard leaderboard = new UserLeaderboard();
     public User user;
     public Trash trash;
-    public UserLeaderboard leaderboard = new UserLeaderboard();
-
+    
     public TrashSegregationGUI(){
         frame.setLayout(new BorderLayout());
         frame.setSize(500, 600);
@@ -20,7 +21,7 @@ public class TrashSegregationGUI {
 
         //---app name panel---//
         JPanel appNamePanel = new JPanel();
-        appNamePanel.setBorder(new EmptyBorder(20, 10, 10, 10));
+        appNamePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         JLabel appName = new JLabel("Trash Segregation App");
         appName.setFont(new Font("Arial", Font.BOLD, 28));
         appNamePanel.add(appName);
@@ -64,13 +65,14 @@ public class TrashSegregationGUI {
         //---END---//
 
         //---panel for buttons---//
-        JPanel btnPanel = new JPanel(new GridLayout(2,1, 20, 20));
+        JPanel btnPanel = new JPanel(new GridLayout(3,1, 20, 20));
         btnPanel.setBorder(new EmptyBorder(10, 50, 50, 50));
         btnPanel.add(addTrashBtn);
         btnPanel.add(leaderboardBtn);
+        btnPanel.add(guideBtn);
         //---END---//
 
-        //---adding for frame out---//
+        //---adding for frame output---//
         mainPanel.add(appNamePanel);
         mainPanel.add(usernamePanel);
         mainPanel.add(trashTypePanel);
@@ -81,43 +83,51 @@ public class TrashSegregationGUI {
         //---END---//
 
         //---add trash button functionality---//
-        addTrashBtn.addActionListener(e ->{
-            if (!usernameField.getText().isEmpty() && !trashNameField.getText().isEmpty() && !trashWeightField.getText().isEmpty()){
+        addTrashBtn.addActionListener(e -> {
+            if (!usernameField.getText().isEmpty() && !trashNameField.getText().isEmpty() && !trashWeightField.getText().isEmpty()) {
                 String trashOption = (String) trashTypeOptions.getSelectedItem();
                 String trashName = trashNameField.getText();
-                double weight = Double.parseDouble(trashWeightField.getText());
-                user = new User(usernameField.getText());
-
-                if (user == null) {
+                
+                try {
+                    double weight = Double.parseDouble(trashWeightField.getText());
                     user = new User(usernameField.getText());
+        
+                    if (user == null) {
+                        user = new User(usernameField.getText());
+                    }
+        
+                    switch (trashOption) {
+                        case "Biodegradable":
+                            trash = new Biodegradable(trashName, weight);
+                            break;
+                        case "Recyclable":
+                            trash = new Recyclable(trashName, weight);
+                            break;
+                        case "Non-Biodegradable":
+                            trash = new NonBiodegradable(trashName, weight);
+                            break;
+                    }
+        
+                    user.addContribution(trash);
+                    trashNameField.setText("");
+                    trashWeightField.setText("");
+                    leaderboard.addUser(user);
+                    JOptionPane.showMessageDialog(frame, "Trash added successfully!", "Successful Addition", JOptionPane.INFORMATION_MESSAGE);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a valid number for the weight.", "Input Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-                switch (trashOption) {
-                    case "Biodegradable": 
-                        trash = new Biodegradable(trashName, weight);
-                        break;
-                    case "Recyclable":
-                        trash = new Recyclable(trashName, weight);
-                        break;
-                    case "Non-Biodegradable":
-                        trash = new NonBiodegradable(trashName, weight);
-                        break;
-                }
-
-                user.addContribution(trash);
-
-                trashNameField.setText("");
-                trashWeightField.setText("");
-                leaderboard.addUser(user);
-                JOptionPane.showMessageDialog(frame, "Trash added successfully!");
-            } 
-            else {
-                JOptionPane.showMessageDialog(frame, "Please fill in empty fields.");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Please fill in empty fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+        
 
         leaderboardBtn.addActionListener(e -> {
             leaderboard.displayUser();
+        });
+
+        guideBtn.addActionListener(e -> {
+            new TrashGuide();
         });
 
         frame.setVisible(true);

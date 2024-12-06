@@ -12,6 +12,7 @@ public class UserLeaderboard {
     public UserLeaderboard() {
         users = new ArrayList<>();
         frame = new JFrame("Leaderboards");
+        frame.setResizable(false);
 
         String[] columnNames = {"Rank", "Username", "Points"};
         tableModel = new DefaultTableModel(columnNames, 0) {
