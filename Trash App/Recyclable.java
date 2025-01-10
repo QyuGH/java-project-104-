@@ -3,6 +3,7 @@ public class Recyclable extends Trash{
         super("Recyclable", trashName, trashWeight);
     }
 
+    @Override
     public int calculatePoints(){
         return (int) (trashWeight * 10);
     }

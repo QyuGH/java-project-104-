@@ -7,4 +7,4 @@ public class Biodegradable extends Trash {
     public int calculatePoints(){
         return (int) (trashWeight * 5);
     }
-}
+} 
